@@ -2,76 +2,47 @@
 Implementation of the CSRNet paper (CVPR 18) in keras-tensorflow. First ever to be done in keras-tf as of 21/9/18.
 
 # Credits 
-Mindspark Hackathon Winning Project(Kumbh-Mela Disaster Management):
-
-Team : Pratik Ratadiya(Web/Django), Aditya Malte(ML/DL), Kshitij Patil(Android), Neeraj Panse(ML/DL)
-
-In order to aid the ML/DL community, we have open sourced the deep learning part of the project.
 
 ### CVPR 2018 Paper : https://arxiv.org/abs/1802.10062
 ### Our Research Paper: https://ijsiet.org/issue2024vol6.html
 
 ### Official Pytorch Implementation : https://github.com/leeyeehoo/CSRNet-pytorch
 
-As we were searching over the internet, we could not find any keras implementation of the state of the art paper CSRNet. A large part of the deep learning community uses keras-tensorflow to implement their neural network models. Thus, we implemented the CSRNet model in keras-tensorflow. Tensorflow has a massive advantage when it comes to deployability(eg. Android,etc).
-
 # Dataset :
 The dataset used is ShanghaiTech dataset available here : [Drive Link](https://drive.google.com/file/d/16dhJn7k4FWVwByRsQAEpl9lwjuV03jVI/view)
 
 The dataset is divided into two parts, A and B. Part A consists of images with a high density of crowd. Part B consists of images with images of sparse crowd scenes.   
 
-# Data Preprocessing  :
-In data preprocessing, the main objective was to convert the ground truth provided by the ShanghaiTech dataset into density maps. For a given image the dataset provided a sparse matrix consisting of the head annotations in that image. This sparse matrix was converted into a 2D density map by passing through a Gaussian Filter. The sum of all the cells in the density map results in the actual count of people in that particular image. Refer the `Preprocess.ipynb` notebook for the same.
+### Abstract
 
-# Data preprocessing math explained:
-Given a set of head annotations our task is to convert it to a density map.
-1) Build a kdtree(a kdtree is a data structure that allows fast computation of K Nearest neighbours) of the head annotations.
-2) Find the average distances for each head with K(in this case 4) nearest heads in the head annotations. Multpiply this value by a    factor, 0.3 as suggested by the author of the paper.
-3) Put this value as sigma and convolve using the 2D Gaussian filter. 
+Crowd counting is known to be act of counting the total crowd present in a certain area. The people in a certain area are called a crowd. The most direct method is to actually count each person in the crowd. For example, turnstiles are often used to precisely count the number of people entering an event.
 
-# Model :
-The CSRNet model uses Convolutional Neural Networks to map the input image to it's respective density map. The model does not make use of any fully connected layers and thus the size of the input image is variable. As a result, the model learns from a large amount of varied data and there is no information loss considering the image resolution. There is no need of reshaping/resizing the image while inferencing. The model architecture is such that considering the input image to be (x,y,3), the output is a desnity map of size (x/8,y/8,1).
+Manual counting, the traditional method employed in such scenarios, is not only time- consuming but also prone to inaccuracies. Recognising the need for an efficient and accurate solution, we propose the implementation of CSRNet, a Congested Scene Recognition Network, for crowd counting and density estimation.
 
-The model architecture is divide into two parts, front-end and back-end. The front-end consists of 13 pretrained layers of the VGG16 model ( 10 Convolution layers and 3 MaxPooling layers ). The fully connected layers of the VGG16 are not taken. The back-end comprises of Dilated Convolution layers. The dilation rate at which maximum accuracy was obtained was experimentally found out be `2` as suggested in the CSRNet paper.
+In our we approach used a modified convolutional neural network equipped with a density map to tackle crowd counting effectively. Despite common hurdles such as partial obstruction and overlapping individuals, our model remains robust. The CSRNet Model processes input images to generate density maps, enabling accurate people counting. Training on the ShanghaiTech Dataset ensures the model's reliability and performance. Our project serves to streamline crowd estimation processes, offering a solution applicable across various scenarios.
 
-Batch Normalisation functionality is also provided in the code. As VGG16 does not have any BN layers, we built a custom VGG16 model and ported pretrained weights of VGG16 to this model.
+### EXISTING SYSTEMS
 
+Existing methods such as MCNN, Switch-CNN, and Contextual Pyramid CNN have been used for crowd counting. While each had its strengths, they also presented limitations. For example, Switch- CNN utilized different CNNs for different parts of a crowd scene, but managing multiple CNN regressors with different architectures added complexity to the model, leading to potential generalization issues. Contextual Pyramid CNN aimed to incorporate global and local contextual information to generate high-quality crowd density maps, but its increased complexity posed a higher risk of overfitting, especially with smaller datasets or inadequate regularization techniques. MCNN attempted to map images to crowd density maps but struggled with generating high-quality density maps.
 
-#### Vairable Size Input
-In keras it is difficult to train a model where the size of the input image is variable. Keras does not allow variable size inputs to be trained in the same batch. One way to tackle this is to combine all images having the same image dimension and train them as a batch. The ShanghaiTech dataset does not contain many images having the same image size and thus such batches could not be made. Another approach is to train each image independantly and run a loop over all images. This approach is not efficient in terms of memory usage and computation time. Thus, we built a custom data generator in keras to efficiently train variable sized images. With a data generator, efficient memory usage takes place and the time taken for training reduces drastically.
+### PROPOSED SYSTEM
 
-The paper also specifies cropping of images as a part of data augmentation. However, the Pytorch implementation does not use cropping of images while training. Hence we have provided a function `preprocess_input()` which can be used inside `image_generator()` to add the cropping functionality. We have trained the model without cropping the images.
+CSRNet is a technique we implemented in our thesis, it deploys a deeper CNN for capturing high- level features and generating high-quality density-maps without increasing the complexity of network.
+The selection of CSRNet as the preferred technique for predicting the total number of people in an image is justified due to its ability to address several shortcomings observed in other approaches.
+CSRNet offers a unique approach that focuses on maximizing feature extraction from the given image while efficiently generating density maps. By leveraging the strengths of convolutional neural networks, CSRNet streamlines the process by processing the entire image to produce accurate counts of people. This approach eliminates the need for complex structures like multi- column architectures and density level classifiers, thereby reducing training time and mitigating unwanted values in density maps.
+CSRNet stands out as a superior choice for predicting the count of people in images due to its ability to overcome the limitations observed in other techniques. By prioritizing feature extraction and simplifying the network architecture, CSRNet offers a more efficient and accurate solution for crowd counting tasks.
 
-The two parts of the dataset, A and B, were trained on two seperate models with the same architecture for 200 epochs. The other hyperparameters were kept identical to those specified in the CSRNet paper and pytorch implementation.
+### CSRNet Architecture
 
-Refer the `Model.ipynb` notebook for the same.
+CSRNet uses CNN as backbone, in our project we will be using VGG16 (Visual Geometry Group 16) . It is nothing but convolutional neural network which is 16 layers deep. We will be using this for feature extraction. The output from this is 1/8th of the given input size.
+Within this we will have convolutional layers with filters of different sizes followed by max pooling layers. The sizes of filters used are 64,128,256,512, the kernel size is 3 and stride is 1. The aim of this is to extract the feature of images from different perspectives. We use max pooling after every 3 layers( a block) to reduce the spatial dimensions of the feature maps, allowing the network to focus on the most important information and discard less relevant details.
+In addition to this, we will be using dialated convolutional layers of size 512. Dilated convolutional layers enable neural networks to see the bigger picture, making them better at understanding the overall context in images. The backend consists of four different configurations, each with its own set of layers and parameters. The concept behind this convolution layer is it increases the kernel size without increasing the parameters so that we can extract the low-quality features very easily.
 
-# Inference :
+### VGG16:
 
-The model A performs very well on dense crowd whereas the model B performs vey well on sparse crowd. The density map generated by both models are accurate enough to depict the varied density of the crowd. Refer to the `Inference.ipynb` for generating inference. 
+In our project, we have opted to utilize the VGG16 architecture, a 16-layer deep Convolutional Neural Network (CNN), as the backbone for feature extraction. The VGG16 model is renowned for its simplicity and effectiveness. It is designed to capture diverse features from input images, enhancing the model's ability to discern intricate details within crowded scenes.
+Filter Sizes and Max Pooling: Within the VGG16 front end, convolutional layers with filters of varying sizes (64, 128, 256, 512) are employed, each followed by max pooling layers. This strategy aims to extract features from different perspectives, providing the network with a comprehensive understanding of the input images.
+Reduction of Spatial Dimensions: Max pooling is strategically applied after every three layers (a block), effectively reducing the spatial dimensions of the feature maps. This process optimizes the network's focus on key information, discarding less relevant details and enhancing computational efficiency.
 
-Given below is the result on actual images taken from the test set provided in the ShanghaiTech dataset.
-
-Actual Image :
-
-<img src="https://github.com/Neerajj9/CSRNet-keras/blob/master/test_images/IMG_105.jpg" width="480">
-
-Generated Density Map : 
-
-<img src="https://github.com/Neerajj9/CSRNet-keras/blob/master/results/105.jpg" width="480">
-
-Actual Count : 258
-
-Predicted Count : 232
-
-# Result :
-
-Given below is comparison between the MAE error  produced by our model. 
-
-|       Dataset       | MAE           |  
-| ------------------- | ------------- |
-|ShanghaiTech part A  | 65.92         | 
-|ShanghaiTech part B  | 11.01         |
-
-
-
+### Dilated Convolutional Layers:
+Overview of Dilated Convolutional Layers: Our model incorporates dilated convolutional layers, a crucial component for enabling the network to perceive a broader context in images. These layers facilitate a more extensive receptive field without a proportional increase in parameters, making them adept at capturing the overall context in the input data.
