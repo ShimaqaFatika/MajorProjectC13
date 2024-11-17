@@ -8,6 +8,7 @@ Team : Pratik Ratadiya(Web/Django), Aditya Malte(ML/DL), Kshitij Patil(Android),
 In order to aid the ML/DL community, we have open sourced the deep learning part of the project.
 
 ### CVPR 2018 Paper : https://arxiv.org/abs/1802.10062
+### Our Research Paper: https://ijsiet.org/issue2024vol6.html
 
 ### Official Pytorch Implementation : https://github.com/leeyeehoo/CSRNet-pytorch
 
