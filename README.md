@@ -45,5 +45,5 @@ Reduction of Spatial Dimensions: Max pooling is strategically applied after ever
 Overview of Dilated Convolutional Layers: Our model incorporates dilated convolutional layers, a crucial component for enabling the network to perceive a broader context in images. These layers facilitate a more extensive receptive field without a proportional increase in parameters, making them adept at capturing the overall context in the input data.
 
 ### Model Analysis
-Mean Square Error: 31
-R - Squared : 0.94
+#### Mean Square Error: 31
+#### R - Squared : 0.94
