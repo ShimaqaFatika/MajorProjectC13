@@ -1,14 +1,14 @@
-# CSRNet-keras
+### CSRNet-keras
 Implementation of the CSRNet paper (CVPR 18) in keras-tensorflow. First ever to be done in keras-tf as of 21/9/18.
 
-# Credits 
+### Credits 
 
 ### CVPR 2018 Paper : https://arxiv.org/abs/1802.10062
 ### Our Research Paper: https://ijsiet.org/issue2024vol6.html
 
 ### Official Pytorch Implementation : https://github.com/leeyeehoo/CSRNet-pytorch
 
-# Dataset :
+### Dataset :
 The dataset used is ShanghaiTech dataset available here : [Drive Link](https://drive.google.com/file/d/16dhJn7k4FWVwByRsQAEpl9lwjuV03jVI/view)
 
 The dataset is divided into two parts, A and B. Part A consists of images with a high density of crowd. Part B consists of images with images of sparse crowd scenes.   
@@ -46,3 +46,7 @@ Reduction of Spatial Dimensions: Max pooling is strategically applied after ever
 
 ### Dilated Convolutional Layers:
 Overview of Dilated Convolutional Layers: Our model incorporates dilated convolutional layers, a crucial component for enabling the network to perceive a broader context in images. These layers facilitate a more extensive receptive field without a proportional increase in parameters, making them adept at capturing the overall context in the input data.
+
+### Model Analysis
+Mean Square Error: 31
+R - Squared : 0.94
