@@ -3,10 +3,9 @@ Implementation of the CSRNet paper (CVPR 18) in keras-tensorflow. First ever to 
 
 ### Credits 
 
-### CVPR 2018 Paper : https://arxiv.org/abs/1802.10062
-### Our Research Paper: https://ijsiet.org/issue2024vol6.html
-
-### Official Pytorch Implementation : https://github.com/leeyeehoo/CSRNet-pytorch
+CVPR 2018 Paper : https://arxiv.org/abs/1802.10062
+Our Research Paper: https://ijsiet.org/issue2024vol6.html
+Official Pytorch Implementation : https://github.com/leeyeehoo/CSRNet-pytorch
 
 ### Dataset :
 The dataset used is ShanghaiTech dataset available here : [Drive Link](https://drive.google.com/file/d/16dhJn7k4FWVwByRsQAEpl9lwjuV03jVI/view)
